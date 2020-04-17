@@ -29,7 +29,7 @@ world.print_rooms()
 
 player = Player(world.starting_room)
 
-directions = {"n", "e", "s", "w"}
+
 
 def dft(starting_room):
 
@@ -43,7 +43,7 @@ def dft(starting_room):
     
     
     
-    print(rooms)
+    # print(rooms)
     path = []
     visited = set()
     
@@ -57,17 +57,24 @@ def dft(starting_room):
         test = stack.pop()
         vertex = test[-1]
         
-        for i in world.rooms:
+    
             
-            if i not in visited:
-                visited.add(i)
-                print(visited)
-                path.append(vertex)
-        
-            for move in player.current_room.get_exits():
-                #player.travel(move)
+        # if vertex not in visited:
+        #     visited.add(vertex)
+            
+    
+        for move in player.current_room.get_exits():
+            
+            if move not in visited:
+                
+                player.travel(move)
                 print(move)
-                temp_path = test.copy()
+            else:
+                #path = path+
+            # player.travel(move)
+            #print(player.current_room.get_exits()[vertex])
+                print("hey", move)
+                temp_path = path.copy()
                 temp_path.append(move)
                 stack.push(move)
                 #visited.append(player.current_room.id)
@@ -78,12 +85,12 @@ def dft(starting_room):
                 # stack.push(temp_path)
                 # path.append(temp_path)
             
-            print(path)
+            # print(path)
         #path = temp_path
             
-    print("path", path[1:])
-    print(visited)
-    print("stack", stack)
+    # print("path", path[1:])
+    # print(visited)
+    # print("stack", stack)
         
     return path[1:]
 
@@ -117,8 +124,8 @@ def dft(starting_room):
 #traversal_path = ['n', 'n']
 traversal_path = dft(player.current_room.id)
 
-print("1", player.current_room.id)
-print("2", player.current_room.get_exits())
+# print("1", player.current_room.id)
+# print("2", player.current_room.get_exits())
 #print(player.travel(direction))
 
 
