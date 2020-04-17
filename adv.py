@@ -15,9 +15,9 @@ world = World()
 # You may uncomment the smaller graphs for development and testing purposes.
 #map_file = "maps/test_line.txt"
 map_file = "maps/test_cross.txt"
-# map_file = "maps/test_loop.txt"
-# map_file = "maps/test_loop_fork.txt"
-# map_file = "maps/main_maze.txt"
+#map_file = "maps/test_loop.txt"
+#map_file = "maps/test_loop_fork.txt"
+#map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
 room_graph=literal_eval(open(map_file, "r").read())
@@ -29,61 +29,97 @@ world.print_rooms()
 
 player = Player(world.starting_room)
 
+directions = {"n", "e", "s", "w"}
+
 def dft(starting_room):
-    #room = Room()
-    
+
     stack = Stack()
-    stack.push([starting_room.id])
+    stack.push([starting_room])
+    
+    rooms = []
+    
+    for i in world.rooms:
+        rooms.append(i)
     
     
     
+    print(rooms)
+    path = []
     visited = set()
     
-    while stack.size() > 0:
-        path = stack.pop()
-        vertex = path[-1]
-        print(vertex)
-        
-        # if vertex not in visited:
-        #     print(vertex, player)
-        #     visited.add(vertex)
-            
-        for step in world.rooms:
-            if step not in visited:
-                print(vertex, player)
-                visited.add(step)
-            
-            print(step, player)
-            temp_path = path.copy()
-            temp_path.append(step)
-            stack.push(temp_path)
-    return
-
-# def bft(starting_room):
-#     visited = set()
-#     queue = Queue()
-#     queue.enqueue([starting_room.id])
     
-#     while queue.size() > 0:
-#         path = queue.dequeue()
-#         vertex = path[-1]
-#         # test = room.id
+        #moves = stack.pop()
+        #person = moves[-1]
+    
+        # if person not in visited:
+        #     visited.add(person)
+    while stack.size() > 0:
+        test = stack.pop()
+        vertex = test[-1]
         
-#         if vertex not in visited:
-#             print(vertex)
-#             visited.add(vertex)
+        for i in world.rooms:
             
-#             for step in world.rooms:
-#                 print(step, world.rooms[vertex])
-#                 temp_path = path.copy()
-#                 temp_path.append(step)
-#                 queue.enqueue(temp_path)
+            if i not in visited:
+                visited.add(i)
+                print(visited)
+                path.append(vertex)
+        
+            for move in player.current_room.get_exits():
+                #player.travel(move)
+                print(move)
+                temp_path = test.copy()
+                temp_path.append(move)
+                stack.push(move)
+                #visited.append(player.current_room.id)
+                
+                # temp_path = move.copy()
+                # temp_path.append(move)
+                # print("temp", temp_path)
+                # stack.push(temp_path)
+                # path.append(temp_path)
+            
+            print(path)
+        #path = temp_path
+            
+    print("path", path[1:])
+    print(visited)
+    print("stack", stack)
+        
+    return path[1:]
+
+#def bft(starting_room):
+    
+    # queue = Queue()
+    # queue.enqueue([starting_room])
+    
+    # path = []
+    # visited = set()
+    
+    # while queue.size() > 0:
+    #     moves = queue.dequeue()
+    #     person = moves[-1]
+    
+    #     # if person not in visited:
+    #     #     visited.add(person)
+            
+    #     for move in player.current_room.get_exits():
+    #         temp_path = moves.copy()
+    #         temp_path.append(move)
+            
+    #         queue.enqueue(temp_path)
+    #         path.append(move)
+            
+    #         print(path)
+                
+    # return path
 
 # Fill this out with directions to walk
 #traversal_path = ['n', 'n']
-traversal_path = dft(player.current_room)
+traversal_path = dft(player.current_room.id)
 
-#print(traversal_path)
+print("1", player.current_room.id)
+print("2", player.current_room.get_exits())
+#print(player.travel(direction))
 
 
 # TRAVERSAL TEST
