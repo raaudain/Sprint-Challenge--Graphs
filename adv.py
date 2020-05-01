@@ -15,10 +15,10 @@ world = World()
 
 # You may uncomment the smaller graphs for development and testing purposes.
 #map_file = "maps/test_line.txt"
-map_file = "maps/test_cross.txt"
+#map_file = "maps/test_cross.txt"
 #map_file = "maps/test_loop.txt"
 #map_file = "maps/test_loop_fork.txt"
-#map_file = "maps/main_maze.txt"
+map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
 room_graph=literal_eval(open(map_file, "r").read())
@@ -39,29 +39,36 @@ move_back = {
     "e": "w"
 }
 
-def traversal(room, visited_room = set(), path = []):
+def traversal(room_id, visited_room = set(), path = [], current_path=None):
 
     for move in player.current_room.get_exits():
-        
+
         # Move player if next_room is not None
-        # See player.py
+        # See player.py file
         player.travel(move)
         
         # If player hasn't been in current room add to visited set
         if player.current_room.id not in visited_room:
             visited_room.add(player.current_room.id)
-            
+
+            # Value changes with every move
+            current_path = f"{player.current_room}.{move}_to"
+
             path.append(move)
-            
+
             # Run function again
-            traversal(room)
-        
+            traversal(player.current_room.id, visited_room, path, current_path)
+
+            # If the current path leads to a deadend, turn back
+            if current_path is not player.current_room.get_exits():
+                player.travel(move_back[move])
+                path.append(move_back[move])
+            
         # If player has been in current room,
         # turn back 
         else:
-            path.append(move)
             player.travel(move_back[move])
-    print(path)
+    
     return path
 
 # Fill this out with directions to walk
