@@ -5,6 +5,7 @@ from world import World
 import sys
 sys.path.append("../Graphs/projects/graph")
 from util import Queue, Stack
+from graph import Graph
 import random
 from ast import literal_eval
 
@@ -30,103 +31,43 @@ world.print_rooms()
 player = Player(world.starting_room)
 
 
+# Used to move back when you hit a deadend
+move_back = {
+    "n": "s",
+    "s": "n",
+    "w": "e",
+    "e": "w"
+}
 
-def dft(starting_room):
+def traversal(room, visited_room = set(), path = []):
 
-    stack = Stack()
-    stack.push([starting_room])
-    
-    rooms = []
-    
-    for i in world.rooms:
-        rooms.append(i)
-    
-    
-    
-    # print(rooms)
-    path = []
-    visited = set()
-    
-    
-        #moves = stack.pop()
-        #person = moves[-1]
-    
-        # if person not in visited:
-        #     visited.add(person)
-    while stack.size() > 0:
-        test = stack.pop()
-        vertex = test[-1]
+    for move in player.current_room.get_exits():
         
-    
-            
-        # if vertex not in visited:
-        #     visited.add(vertex)
-            
-    
-        for move in player.current_room.get_exits():
-            
-            if move not in visited:
-                
-                player.travel(move)
-                print(move)
-            else:
-                #path = path+
-            # player.travel(move)
-            #print(player.current_room.get_exits()[vertex])
-                print("hey", move)
-                temp_path = path.copy()
-                temp_path.append(move)
-                stack.push(move)
-                #visited.append(player.current_room.id)
-                
-                # temp_path = move.copy()
-                # temp_path.append(move)
-                # print("temp", temp_path)
-                # stack.push(temp_path)
-                # path.append(temp_path)
-            
-            # print(path)
-        #path = temp_path
-            
-    # print("path", path[1:])
-    # print(visited)
-    # print("stack", stack)
+        # Move player if next_room is not None
+        # See player.py
+        player.travel(move)
         
-    return path[1:]
-
-#def bft(starting_room):
-    
-    # queue = Queue()
-    # queue.enqueue([starting_room])
-    
-    # path = []
-    # visited = set()
-    
-    # while queue.size() > 0:
-    #     moves = queue.dequeue()
-    #     person = moves[-1]
-    
-    #     # if person not in visited:
-    #     #     visited.add(person)
+        # If player hasn't been in current room add to visited set
+        if player.current_room.id not in visited_room:
+            visited_room.add(player.current_room.id)
             
-    #     for move in player.current_room.get_exits():
-    #         temp_path = moves.copy()
-    #         temp_path.append(move)
+            path.append(move)
             
-    #         queue.enqueue(temp_path)
-    #         path.append(move)
-            
-    #         print(path)
-                
-    # return path
+            # Run function again
+            traversal(room)
+        
+        # If player has been in current room,
+        # turn back 
+        else:
+            path.append(move)
+            player.travel(move_back[move])
+    print(path)
+    return path
 
 # Fill this out with directions to walk
 #traversal_path = ['n', 'n']
-traversal_path = dft(player.current_room.id)
-
-# print("1", player.current_room.id)
-# print("2", player.current_room.get_exits())
-#print(player.travel(direction))
+traversal_path = traversal(player.current_room.id)
+#traversal_path = []
 
 
 # TRAVERSAL TEST
