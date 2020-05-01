@@ -3,9 +3,6 @@ from player import Player
 from world import World
 
 import sys
-sys.path.append("../Graphs/projects/graph")
-from util import Queue, Stack
-from graph import Graph
 import random
 from ast import literal_eval
 
@@ -47,7 +44,7 @@ def traversal(room_id, visited_room = set(), path = [], current_path=None):
         # See player.py file
         player.travel(move)
         
-        # If player hasn't been in current room add to visited set
+        # If player hasn't been in current room add to visited room set
         if player.current_room.id not in visited_room:
             visited_room.add(player.current_room.id)
 
@@ -64,8 +61,7 @@ def traversal(room_id, visited_room = set(), path = [], current_path=None):
                 player.travel(move_back[move])
                 path.append(move_back[move])
             
-        # If player has been in current room,
-        # turn back 
+        # If player has been in current room, turn back 
         else:
             player.travel(move_back[move])
     
