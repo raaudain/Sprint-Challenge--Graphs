@@ -8,7 +8,6 @@ from ast import literal_eval
 
 # Load world
 world = World()
-#room = Room()
 
 # You may uncomment the smaller graphs for development and testing purposes.
 #map_file = "maps/test_line.txt"
@@ -24,9 +23,7 @@ world.load_graph(room_graph)
 # Print an ASCII map
 world.print_rooms()
 
-
 player = Player(world.starting_room)
-
 
 # Used to move back when you hit a deadend
 move_back = {
@@ -48,7 +45,7 @@ def traversal(room_id, visited_room = set(), path = [], current_path=None):
         if player.current_room.id not in visited_room:
             visited_room.add(player.current_room.id)
 
-            # Value changes with every move
+            # Direction value changes with every move
             current_path = f"{player.current_room}.{move}_to"
 
             path.append(move)
@@ -56,8 +53,8 @@ def traversal(room_id, visited_room = set(), path = [], current_path=None):
             # Run function again
             traversal(player.current_room.id, visited_room, path, current_path)
 
-            # If the current path leads to a deadend, turn back
-            if current_path is not player.current_room.get_exits():
+            # If the current path is not one of the possible exits, turn back
+            if current_path not in player.current_room.get_exits():
                 player.travel(move_back[move])
                 path.append(move_back[move])
             
@@ -67,10 +64,10 @@ def traversal(room_id, visited_room = set(), path = [], current_path=None):
     
     return path
 
+
 # Fill this out with directions to walk
 #traversal_path = ['n', 'n']
 traversal_path = traversal(player.current_room.id)
-#traversal_path = []
 
 
 # TRAVERSAL TEST
